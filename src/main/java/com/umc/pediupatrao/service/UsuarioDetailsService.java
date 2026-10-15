@@ -19,11 +19,23 @@ public class UsuarioDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return usuarioRepository.findByUsername(username)
-                .map(usuario -> User.builder()
-                        .username(usuario.getUsername())
-                        .password(usuario.getPassword())
-                        .roles("USER") // Adicione roles conforme necessário
-                        .build())
+                .map(usuario -> {
+                    String role = usuario.getRole();
+                    if (role == null || role.isBlank() || "USER".equalsIgnoreCase(role)) {
+                        role = "ATENDENTE";
+                    }
+                    if (role.startsWith("ROLE_")) {
+                        role = role.substring(5);
+                    }
+                    if (!role.equals("ADMIN") && !role.equals("GERENTE") && !role.equals("ATENDENTE")) {
+                        role = "ATENDENTE";
+                    }
+                    return User.builder()
+                            .username(usuario.getUsername())
+                            .password(usuario.getPassword())
+                            .roles(role)
+                            .build();
+                })
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
     }
 }

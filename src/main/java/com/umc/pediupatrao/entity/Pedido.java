@@ -3,9 +3,17 @@ package com.umc.pediupatrao.entity;
 import jakarta.persistence.Entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 @Document(collection = "pedidos")
 @Entity
+@Getter
+@Setter
 public class Pedido {
     @Id
     private String id;
@@ -14,54 +22,25 @@ public class Pedido {
     private String status;
     private int quantidade;
     private String sabor;
+    private List<Item> itens = new ArrayList<>();
+    private BigDecimal subtotal = BigDecimal.ZERO;
+    private BigDecimal descontoPercentual = BigDecimal.ZERO;
+    private BigDecimal valorDesconto = BigDecimal.ZERO;
+    private BigDecimal valorTotal = BigDecimal.ZERO;
+    private String responsavelRegistro;
+    private Instant dataHoraEntrada;
+    private String responsavelSaida;
+    private Instant dataHoraSaida;
+    private String justificativaCancelamento;
 
-    public String getId() {
-        return id;
+    @Getter
+    @Setter
+    public static class Item {
+        private String produtoId;
+        private String nomeProduto;
+        private int quantidade;
+        private BigDecimal precoUnitario;
+        private BigDecimal total;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getClienteId() {
-        return clienteId;
-    }
-
-    public void setClienteId(String clienteId) {
-        this.clienteId = clienteId;
-    }
-
-    public String getTipoPizza() {
-        return tipoPizza;
-    }
-
-    public void setTipoPizza(String tipoPizza) {
-        this.tipoPizza = tipoPizza;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public String getSabor() {
-        return sabor;
-    }
-
-    public void setSabor(String sabor) {
-        this.sabor = sabor;
-    }
-    
-    
 }

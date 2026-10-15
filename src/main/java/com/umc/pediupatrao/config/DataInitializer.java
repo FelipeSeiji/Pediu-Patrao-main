@@ -2,30 +2,33 @@ package com.umc.pediupatrao.config;
 
 import com.umc.pediupatrao.entity.Usuario;
 import com.umc.pediupatrao.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner initDatabase(UsuarioRepository repo) {
+    CommandLineRunner initDatabase(UsuarioRepository repo, PasswordEncoder passwordEncoder,
+            @Value("${APP_BOOTSTRAP_ADMIN_PASSWORD:}") String senhaInicial) {
         return args -> {
-
-            if (repo.findByUsername("admin").isEmpty()) {
-
-                BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
+            if (repo.findByUsername("admin").isEmpty() && !senhaInicial.isBlank()) {
                 Usuario user = new Usuario();
                 user.setUsername("admin");
-                user.setPassword(encoder.encode("teste123"));
+                user.setPassword(passwordEncoder.encode(senhaInicial));
+                user.setRole("ADMIN");
 
                 repo.save(user);
-
-                System.out.println("Usuário admin criado!");
             }
+            repo.findByUsername("admin").ifPresent(user -> {
+                if (user.getRole() == null || user.getRole().isBlank() || "USER".equalsIgnoreCase(user.getRole())) {
+                    user.setRole("ADMIN");
+                    repo.save(user);
+                }
+            });
         };
     }
 }

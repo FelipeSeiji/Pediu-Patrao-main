@@ -1,11 +1,10 @@
 package com.umc.pediupatrao.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.umc.pediupatrao.entity.Cliente;
 import com.umc.pediupatrao.entity.Pedido;
 import com.umc.pediupatrao.entity.Produto;
 import com.umc.pediupatrao.entity.Usuario;
+import com.umc.pediupatrao.service.AuditoriaService;
 import com.umc.pediupatrao.service.ClienteService;
 import com.umc.pediupatrao.service.PedidoService;
 import com.umc.pediupatrao.service.ProdutoService;
@@ -14,16 +13,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
+@Slf4j
 public class HomeController {
-
-    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
     @Autowired
     private PedidoService pedidoService;
@@ -36,6 +38,9 @@ public class HomeController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private AuditoriaService auditoriaService;
 
     @GetMapping("/login")
     public String login() {
@@ -116,6 +121,15 @@ public class HomeController {
     public String pedidos(Model model) {
         List<Pedido> pedidos = pedidoService.listarPedidos();
         model.addAttribute("pedidos", pedidos);
+        boolean podeRegistrar = temPerfil("ATENDENTE", "GERENTE");
+        model.addAttribute("podeRegistrarPedido", podeRegistrar);
+        model.addAttribute("podeAtualizarPedido", podeRegistrar);
+        model.addAttribute("podeGerenciarPedido", temPerfil("GERENTE"));
+        model.addAttribute("clientes", podeRegistrar ? clienteService.listarClientes() : List.of());
+        model.addAttribute("produtos", podeRegistrar ? produtoService.listarProdutos() : List.of());
+        Pedido novoPedido = new Pedido();
+        novoPedido.getItens().add(new Pedido.Item());
+        model.addAttribute("pedido", novoPedido);
         model.addAttribute("content", "pedidos :: content");
         log.info("Carregando fragmento: pedidos :: content");
         return "layout";
@@ -146,6 +160,7 @@ public class HomeController {
     }
 
     @GetMapping("/clientes/novo")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ATENDENTE')")
     public String novoClienteForm(Model model) {
         model.addAttribute("cliente", new Cliente());
         model.addAttribute("content", "clientes/form :: content");
@@ -153,6 +168,7 @@ public class HomeController {
     }
 
     @PostMapping("/clientes/salvar")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ATENDENTE')")
     public String salvarCliente(@ModelAttribute Cliente cliente,
             RedirectAttributes redirectAttributes) {
         clienteService.salvar(cliente);
@@ -161,6 +177,7 @@ public class HomeController {
     }
 
     @GetMapping("/clientes/editar/{id}")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ATENDENTE')")
     public String editarClienteForm(@PathVariable String id, Model model,
             RedirectAttributes redirectAttributes) {
         boolean encontrado = clienteService.buscarPorId(id).map(c -> {
@@ -178,6 +195,7 @@ public class HomeController {
     }
 
     @PostMapping("/clientes/editar/{id}")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ATENDENTE')")
     public String atualizarCliente(@PathVariable String id,
             @ModelAttribute Cliente cliente,
             RedirectAttributes redirectAttributes) {
@@ -202,7 +220,30 @@ public class HomeController {
     }
 
     @GetMapping("/admin")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
     public String admin() {
         return "admin";
+    }
+
+    @GetMapping("/auditoria")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
+    public String auditoria(Model model) {
+        model.addAttribute("registros", auditoriaService.listar());
+        model.addAttribute("content", "auditoria :: content");
+        return "layout";
+    }
+
+    private boolean temPerfil(String... perfis) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(authority -> java.util.Arrays.stream(perfis)
+                        .anyMatch(perfil -> authority.getAuthority().equals("ROLE_" + perfil)));
+    }
+
+    @ModelAttribute
+    public void adicionarPerfisAoModelo(Model model) {
+        model.addAttribute("perfilAdmin", temPerfil("ADMIN"));
+        model.addAttribute("perfilGerente", temPerfil("GERENTE"));
+        model.addAttribute("perfilAtendente", temPerfil("ATENDENTE"));
     }
 }
