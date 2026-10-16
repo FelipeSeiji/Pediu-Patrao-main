@@ -4,6 +4,7 @@ import com.umc.pediupatrao.entity.Produto;
 import com.umc.pediupatrao.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
@@ -18,6 +19,10 @@ public class ProdutoService {
 
     public List<Produto> listarProdutos() {
         return produtoRepository.findAll();
+    }
+
+    public Optional<Produto> buscarPorId(String id) {
+        return produtoRepository.findById(id);
     }
 
     // Método para excluir cliente

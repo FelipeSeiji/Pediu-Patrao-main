@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.extern.slf4j.Slf4j;
 
@@ -147,6 +146,39 @@ public class HomeController {
         return "layout";
     }
 
+    @GetMapping("/produtos/novo")
+    public String novoProduto(Model model) {
+        model.addAttribute("produto", new Produto());
+        model.addAttribute("content", "produtos/produto-form :: content");
+        return "layout";
+    }
+
+    @GetMapping("/produtos/editar/{id}")
+    public String editarProduto(@PathVariable String id, Model model, RedirectAttributes attributes) {
+        return produtoService.buscarPorId(id).map(produto -> {
+            model.addAttribute("produto", produto);
+            model.addAttribute("content", "produtos/produto-form :: content");
+            return "layout";
+        }).orElseGet(() -> {
+            attributes.addFlashAttribute("erro", "Produto não encontrado.");
+            return "redirect:/produtos";
+        });
+    }
+
+    @PostMapping("/produtos/salvar")
+    public String salvarProduto(@ModelAttribute Produto produto, RedirectAttributes attributes) {
+        produtoService.salvar(produto);
+        attributes.addFlashAttribute("sucesso", "Produto salvo com sucesso.");
+        return "redirect:/produtos";
+    }
+
+    @PostMapping("/produtos/deletar/{id}")
+    public String deletarProduto(@PathVariable String id, RedirectAttributes attributes) {
+        produtoService.excluir(id);
+        attributes.addFlashAttribute("sucesso", "Produto removido com sucesso.");
+        return "redirect:/produtos";
+    }
+
     // ========================
     // CLIENTES
     // ========================
@@ -240,10 +272,4 @@ public class HomeController {
                         .anyMatch(perfil -> authority.getAuthority().equals("ROLE_" + perfil)));
     }
 
-    @ModelAttribute
-    public void adicionarPerfisAoModelo(Model model) {
-        model.addAttribute("perfilAdmin", temPerfil("ADMIN"));
-        model.addAttribute("perfilGerente", temPerfil("GERENTE"));
-        model.addAttribute("perfilAtendente", temPerfil("ATENDENTE"));
-    }
 }
