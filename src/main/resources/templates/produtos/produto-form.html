@@ -9,7 +9,7 @@
     <div class="card shadow-sm" style="max-width: 640px">
         <div class="card-body p-4">
             <form th:action="@{/produtos/salvar}" th:object="${produto}" method="post">
-                <input type="hidden" th:field="*{id}"/>
+                <input type="hidden" th:field="*{id}" th:if="${produto.id != null}"/>
                 <div class="mb-3">
                     <label for="nome" class="form-label">Nome</label>
                     <input id="nome" type="text" class="form-control" th:field="*{nome}" required/>

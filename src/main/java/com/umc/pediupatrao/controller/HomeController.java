@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.extern.slf4j.Slf4j;
 
@@ -167,8 +168,12 @@ public class HomeController {
 
     @PostMapping("/produtos/salvar")
     public String salvarProduto(@ModelAttribute Produto produto, RedirectAttributes attributes) {
-        produtoService.salvar(produto);
-        attributes.addFlashAttribute("sucesso", "Produto salvo com sucesso.");
+        try {
+            produtoService.salvar(produto);
+            attributes.addFlashAttribute("sucesso", "Produto salvo com sucesso.");
+        } catch (ResponseStatusException exception) {
+            attributes.addFlashAttribute("erro", exception.getReason());
+        }
         return "redirect:/produtos";
     }
 

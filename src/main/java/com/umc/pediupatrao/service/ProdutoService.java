@@ -2,16 +2,19 @@ package com.umc.pediupatrao.service;
 
 import com.umc.pediupatrao.entity.Produto;
 import com.umc.pediupatrao.repository.ProdutoRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class ProdutoService {
+    private final ProdutoRepository produtoRepository;
 
-    @Autowired
-    private ProdutoRepository produtoRepository;
+    public ProdutoService(ProdutoRepository produtoRepository) {
+        this.produtoRepository = produtoRepository;
+    }
 
     public Produto novoProduto(Produto produto) {
         return produtoRepository.save(produto);
@@ -33,17 +36,13 @@ public class ProdutoService {
 
     // Método para salvar um novo cliente ou atualizar um cliente existente
     public Produto salvar(Produto produto) {
-        // Se o cliente não tem ID (novo cliente), salva como novo
-        if (produto.getId() == null) {
-            return produtoRepository.save(produto);  // Cria um novo cliente
-        } // Se já tem ID (cliente existente), atualiza
-        else {
-            // Verifica se o cliente existe antes de atualizar
-            if (produtoRepository.existsById(produto.getId())) {
-                return produtoRepository.save(produto);  // Atualiza o cliente existente
-            } else {
-                throw new IllegalArgumentException("Cliente não encontrado para atualização.");
-            }
+        // Thymeleaf may submit a blank hidden ID when the form creates a product.
+        if (produto.getId() != null && produto.getId().isBlank()) {
+            produto.setId(null);
         }
+        if (produto.getId() != null && !produtoRepository.existsById(produto.getId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado para atualização.");
+        }
+        return produtoRepository.save(produto);
     }
 }

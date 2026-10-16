@@ -32,6 +32,11 @@ public class EntregadorService {
                 || entregador.getTelefone() == null || entregador.getTelefone().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nome e telefone são obrigatórios.");
         }
+        // Thymeleaf can submit the hidden ID as an empty string on the create form.
+        // Treat that value as a new record instead of looking it up in MongoDB.
+        if (entregador.getId() != null && entregador.getId().isBlank()) {
+            entregador.setId(null);
+        }
         if (entregador.getId() != null && !repository.existsById(entregador.getId())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Entregador não encontrado.");
         }
