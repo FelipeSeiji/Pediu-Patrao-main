@@ -1,0 +1,50 @@
+{
+  "ambiente": "demo local com MongoDB real",
+  "verificacoes": [
+    {
+      "rota": "/api/dashboard/filtros",
+      "http": 200,
+      "resultado": "passou"
+    },
+    {
+      "rota": "/api/dashboard?inicio=2026-10-02&fim=2026-10-31",
+      "http": 200,
+      "resultado": "passou"
+    },
+    {
+      "rota": "/api/dashboard?inicio=2026-10-02&fim=2026-10-31&agrupamento=semana",
+      "http": 200,
+      "resultado": "passou"
+    },
+    {
+      "rota": "/api/dashboard?inicio=2026-10-02&fim=2026-10-31&status=CANCELADO",
+      "http": 200,
+      "resultado": "passou"
+    },
+    {
+      "rota": "/api/dashboard/pedidos?inicio=2026-10-02&fim=2026-10-31&pagina=0&tamanho=8",
+      "http": 200,
+      "resultado": "passou"
+    },
+    {
+      "rota": "/api/dashboard?inicio=31-10-2026",
+      "http": 400,
+      "resultado": "passou"
+    },
+    {
+      "rota": "/api/dashboard?status=INVALIDO",
+      "http": 400,
+      "resultado": "passou"
+    },
+    {
+      "rota": "/api/dashboard/pedidos?pagina=-1",
+      "http": 400,
+      "resultado": "passou"
+    },
+    {
+      "rota": "/api/dashboard",
+      "http": 401,
+      "resultado": "passou"
+    }
+  ]
+}

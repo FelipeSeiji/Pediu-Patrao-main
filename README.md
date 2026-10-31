@@ -2,6 +2,45 @@
 
 Sistema de pedidos para pizzaria com Spring Boot, Thymeleaf, Spring Security e MongoDB.
 
+## Dashboard Administrativo
+
+Abra **Dashboard** no menu lateral ou acesse `/dashboard` após entrar como `ADMIN` ou `GERENTE`. O painel consulta a API e o MongoDB reais, com indicadores de faturamento líquido, pedidos, ticket médio, cancelamentos, comparação com período anterior, gráficos, top 5 e pedidos paginados. Filtros por datas e situação, agrupamentos diário/semanal/mensal e atualização a cada 60 segundos.
+
+![Dashboard Administrativo](docs/dashboard/evidencias/01-visao-geral.png)
+
+### Entregáveis da atividade
+
+- [Documento de requisitos funcionais e não funcionais](docs/dashboard/requisitos.md)
+- [Documentação da API: parâmetros, exemplos e erros](docs/dashboard/api.md) e [contrato OpenAPI](docs/dashboard/openapi.yaml)
+- [Arquitetura, modelagem e Gitflow](docs/dashboard/arquitetura.md)
+- [Evidências de testes](docs/dashboard/testes.md)
+- [Vídeo da demonstração](docs/dashboard/demonstracao.mp4) e [roteiro de apresentação](docs/dashboard/apresentacao.md)
+- Código em `src/main/java/com/umc/pediupatrao/dashboard`, tela em `templates/dashboard.html` e testes em `src/test/java/com/umc/pediupatrao/dashboard`.
+
+Fluxo de branches: `main` → `develop` → `codex/feature/dashboard-administrativo` → pull request para `develop`. O documento de arquitetura descreve a promoção após revisão.
+
+### Demonstração com dados separados
+
+Requisitos: **Java 21** e MongoDB **5.0 ou superior** (`$dateTrunc`). A configuração Docker e o CI usam MongoDB 8.0. Inicie um MongoDB local ou, com Docker disponível, execute `docker compose up -d`. Depois:
+
+```powershell
+$env:MONGODB_URI = 'mongodb://localhost:27017/pediupatrao_demo'
+$env:MONGODB_DATABASE = 'pediupatrao_demo'
+$env:APP_BOOTSTRAP_ADMIN_PASSWORD = Read-Host 'Defina a senha inicial do admin'
+.\mvnw.cmd spring-boot:run '-Dspring-boot.run.profiles=demo'
+```
+
+Entre em [localhost:8080/login](http://localhost:8080/login) como `admin` com a senha definida e abra o Dashboard. O perfil `demo` gera 60 dias de pedidos fictícios somente em banco com sufixo `_demo` e com coleção de pedidos vazia. Para dados reais, execute sem esse perfil. Nenhuma senha é definida no código.
+
+Para executar **também os testes com MongoDB real**, use um servidor local separado ou o MongoDB do Compose. Os testes usam exclusivamente o banco `pediupatrao_dashboard_test`:
+
+```powershell
+$env:MONGODB_TEST_URI = 'mongodb://localhost:27017/pediupatrao_dashboard_test'
+.\mvnw.cmd verify
+```
+
+Sem `MONGODB_TEST_URI`, somente os testes de integração com banco são ignorados. O GitHub Actions executa a suíte completa com MongoDB.
+
 ## Execução
 
 Requisitos: Java 21 e MongoDB.

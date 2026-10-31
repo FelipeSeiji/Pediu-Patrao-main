@@ -1,0 +1,240 @@
+{
+  "filtros": {
+    "inicio": "2026-10-02",
+    "fim": "2026-10-31",
+    "status": null,
+    "agrupamento": "dia"
+  },
+  "fusoHorario": "America/Sao_Paulo",
+  "atualizadoEm": "2026-10-31T23:43:44.084894800Z",
+  "indicadores": {
+    "pedidos": 731,
+    "finalizados": 664,
+    "emAndamento": 9,
+    "cancelados": 58,
+    "faturamento": 68438.09,
+    "ticketMedio": 103.07,
+    "descontos": 857.11,
+    "taxaCancelamento": 7.93
+  },
+  "comparacao": {
+    "inicio": "2026-09-02",
+    "fim": "2026-10-01",
+    "faturamento": 51148.36,
+    "variacaoFaturamento": 33.8
+  },
+  "vendas": [
+    {
+      "data": "2026-10-02",
+      "pedidos": 28,
+      "faturamento": 2982.29
+    },
+    {
+      "data": "2026-10-03",
+      "pedidos": 31,
+      "faturamento": 2539.74
+    },
+    {
+      "data": "2026-10-04",
+      "pedidos": 23,
+      "faturamento": 2060.44
+    },
+    {
+      "data": "2026-10-05",
+      "pedidos": 22,
+      "faturamento": 2744.68
+    },
+    {
+      "data": "2026-10-06",
+      "pedidos": 22,
+      "faturamento": 2114.15
+    },
+    {
+      "data": "2026-10-07",
+      "pedidos": 14,
+      "faturamento": 1300.5
+    },
+    {
+      "data": "2026-10-08",
+      "pedidos": 17,
+      "faturamento": 1273.83
+    },
+    {
+      "data": "2026-10-09",
+      "pedidos": 28,
+      "faturamento": 2775.45
+    },
+    {
+      "data": "2026-10-10",
+      "pedidos": 33,
+      "faturamento": 3040.54
+    },
+    {
+      "data": "2026-10-11",
+      "pedidos": 26,
+      "faturamento": 2915.11
+    },
+    {
+      "data": "2026-10-12",
+      "pedidos": 20,
+      "faturamento": 1966.19
+    },
+    {
+      "data": "2026-10-13",
+      "pedidos": 21,
+      "faturamento": 1857.43
+    },
+    {
+      "data": "2026-10-14",
+      "pedidos": 22,
+      "faturamento": 1629.43
+    },
+    {
+      "data": "2026-10-15",
+      "pedidos": 19,
+      "faturamento": 1617.62
+    },
+    {
+      "data": "2026-10-16",
+      "pedidos": 34,
+      "faturamento": 2960.16
+    },
+    {
+      "data": "2026-10-17",
+      "pedidos": 27,
+      "faturamento": 2284.94
+    },
+    {
+      "data": "2026-10-18",
+      "pedidos": 29,
+      "faturamento": 2658.47
+    },
+    {
+      "data": "2026-10-19",
+      "pedidos": 19,
+      "faturamento": 1909.79
+    },
+    {
+      "data": "2026-10-20",
+      "pedidos": 20,
+      "faturamento": 1879.52
+    },
+    {
+      "data": "2026-10-21",
+      "pedidos": 23,
+      "faturamento": 1984.51
+    },
+    {
+      "data": "2026-10-22",
+      "pedidos": 20,
+      "faturamento": 1663.29
+    },
+    {
+      "data": "2026-10-23",
+      "pedidos": 34,
+      "faturamento": 3407.56
+    },
+    {
+      "data": "2026-10-24",
+      "pedidos": 31,
+      "faturamento": 3033.51
+    },
+    {
+      "data": "2026-10-25",
+      "pedidos": 27,
+      "faturamento": 2619.25
+    },
+    {
+      "data": "2026-10-26",
+      "pedidos": 18,
+      "faturamento": 1824.71
+    },
+    {
+      "data": "2026-10-27",
+      "pedidos": 23,
+      "faturamento": 2582.87
+    },
+    {
+      "data": "2026-10-28",
+      "pedidos": 24,
+      "faturamento": 2849.37
+    },
+    {
+      "data": "2026-10-29",
+      "pedidos": 18,
+      "faturamento": 1480.02
+    },
+    {
+      "data": "2026-10-30",
+      "pedidos": 27,
+      "faturamento": 2661.27
+    },
+    {
+      "data": "2026-10-31",
+      "pedidos": 31,
+      "faturamento": 1821.45
+    }
+  ],
+  "situacoes": [
+    {
+      "status": "RECEBIDO",
+      "quantidade": 1
+    },
+    {
+      "status": "EM_PREPARACAO",
+      "quantidade": 2
+    },
+    {
+      "status": "PRONTO",
+      "quantidade": 2
+    },
+    {
+      "status": "SAIU_PARA_ENTREGA",
+      "quantidade": 2
+    },
+    {
+      "status": "RETIRADO",
+      "quantidade": 2
+    },
+    {
+      "status": "FINALIZADO",
+      "quantidade": 664
+    },
+    {
+      "status": "CANCELADO",
+      "quantidade": 58
+    }
+  ],
+  "produtos": [
+    {
+      "produtoId": "demo-produto-1",
+      "nome": "Pizza de mussarela",
+      "quantidade": 376,
+      "receitaBruta": 16882.4
+    },
+    {
+      "produtoId": "demo-produto-0",
+      "nome": "Pizza de calabresa",
+      "quantidade": 329,
+      "receitaBruta": 16417.1
+    },
+    {
+      "produtoId": "demo-produto-5",
+      "nome": "Batata frita",
+      "quantidade": 323,
+      "receitaBruta": 7106.0
+    },
+    {
+      "produtoId": "demo-produto-3",
+      "nome": "Pizza portuguesa",
+      "quantidade": 308,
+      "receitaBruta": 16909.2
+    },
+    {
+      "produtoId": "demo-produto-2",
+      "nome": "X-bacon artesanal",
+      "quantidade": 297,
+      "receitaBruta": 8464.5
+    }
+  ]
+}

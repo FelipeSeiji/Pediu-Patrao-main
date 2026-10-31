@@ -1,0 +1,247 @@
+openapi: 3.0.3
+info:
+  title: Pediu Patrão — Dashboard Administrativo
+  version: 1.0.0
+  description: >-
+    Consultas operacionais autenticadas por sessão para ADMIN e GERENTE.
+    Receita realizada inclui apenas FINALIZADO (e legado ENTREGUE), após desconto.
+    Datas se referem ao recebimento, no fuso America/Sao_Paulo.
+servers:
+  - url: http://localhost:8080
+security:
+  - sessao: []
+tags:
+  - name: Dashboard
+paths:
+  /api/dashboard:
+    get:
+      tags: [Dashboard]
+      operationId: consultarDashboard
+      summary: Indicadores, comparação, vendas, situações e top 5
+      parameters:
+        - $ref: '#/components/parameters/Inicio'
+        - $ref: '#/components/parameters/Fim'
+        - $ref: '#/components/parameters/Status'
+        - in: query
+          name: agrupamento
+          schema: {type: string, enum: [dia, semana, mes], default: dia}
+      responses:
+        '200':
+          description: Consulta calculada; inclui zeros quando não há pedidos.
+          headers:
+            Cache-Control:
+              schema: {type: string, example: no-store}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Resumo'}
+        '400': {$ref: '#/components/responses/Invalido'}
+        '401': {$ref: '#/components/responses/NaoAutenticado'}
+        '403': {$ref: '#/components/responses/Proibido'}
+        '503': {$ref: '#/components/responses/Indisponivel'}
+  /api/dashboard/pedidos:
+    get:
+      tags: [Dashboard]
+      operationId: consultarPedidosDashboard
+      summary: Pedidos paginados por entrada e ID decrescentes
+      parameters:
+        - $ref: '#/components/parameters/Inicio'
+        - $ref: '#/components/parameters/Fim'
+        - $ref: '#/components/parameters/Status'
+        - in: query
+          name: pagina
+          schema: {type: integer, minimum: 0, maximum: 100000, default: 0}
+        - in: query
+          name: tamanho
+          schema: {type: integer, minimum: 1, maximum: 50, default: 8}
+      responses:
+        '200':
+          description: Página sem dados pessoais; página além do total contém itens vazios.
+          headers:
+            Cache-Control:
+              schema: {type: string, example: no-store}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Pagina'}
+        '400': {$ref: '#/components/responses/Invalido'}
+        '401': {$ref: '#/components/responses/NaoAutenticado'}
+        '403': {$ref: '#/components/responses/Proibido'}
+        '503': {$ref: '#/components/responses/Indisponivel'}
+  /api/dashboard/filtros:
+    get:
+      tags: [Dashboard]
+      operationId: consultarFiltrosDashboard
+      summary: Opções de filtros e data atual do estabelecimento
+      responses:
+        '200':
+          description: Metadados da consulta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, agrupamentos, fusoHorario, limiteDias, hoje]
+                properties:
+                  status:
+                    type: array
+                    items: {$ref: '#/components/schemas/Status'}
+                  agrupamentos:
+                    type: array
+                    items: {type: string, enum: [dia, semana, mes]}
+                  fusoHorario: {type: string, example: America/Sao_Paulo}
+                  limiteDias: {type: integer, example: 366}
+                  hoje: {type: string, format: date}
+        '401': {$ref: '#/components/responses/NaoAutenticado'}
+        '403': {$ref: '#/components/responses/Proibido'}
+components:
+  securitySchemes:
+    sessao:
+      type: apiKey
+      in: cookie
+      name: JSESSIONID
+      description: Sessão obtida pelo formulário POST /login com token CSRF.
+  parameters:
+    Inicio:
+      in: query
+      name: inicio
+      description: Data inicial inclusiva; padrão fim menos 29 dias. Período total de 1 a 366 dias.
+      schema: {type: string, format: date}
+      example: '2026-10-01'
+    Fim:
+      in: query
+      name: fim
+      description: Data final inclusiva; padrão hoje no fuso de São Paulo.
+      schema: {type: string, format: date}
+      example: '2026-10-31'
+    Status:
+      in: query
+      name: status
+      description: Ausente ou vazio seleciona todos. Valores canônicos aceitam maiúsculas/minúsculas.
+      allowEmptyValue: true
+      schema: {$ref: '#/components/schemas/Status'}
+  responses:
+    Invalido:
+      description: Data, período, status, agrupamento ou paginação inválidos.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problema'}
+    NaoAutenticado:
+      description: Sessão ausente ou expirada. Fazer login novamente.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problema'}
+    Proibido:
+      description: Apenas ADMIN e GERENTE têm acesso.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problema'}
+    Indisponivel:
+      description: Banco temporariamente indisponível. Tentar novamente.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problema'}
+  schemas:
+    Status:
+      type: string
+      enum: [RECEBIDO, EM_PREPARACAO, PRONTO, SAIU_PARA_ENTREGA, RETIRADO, FINALIZADO, CANCELADO]
+    Dinheiro:
+      type: number
+      description: Valor em BRL, arredondado a duas casas com HALF_UP.
+      example: 90.00
+    Filtros:
+      type: object
+      required: [inicio, fim, status, agrupamento]
+      properties:
+        inicio: {type: string, format: date}
+        fim: {type: string, format: date}
+        status: {type: string, nullable: true}
+        agrupamento: {type: string, enum: [dia, semana, mes]}
+    Indicadores:
+      type: object
+      required: [pedidos, finalizados, emAndamento, cancelados, faturamento, ticketMedio, descontos, taxaCancelamento]
+      properties:
+        pedidos: {type: integer, format: int64}
+        finalizados: {type: integer, format: int64}
+        emAndamento: {type: integer, format: int64}
+        cancelados: {type: integer, format: int64}
+        faturamento: {$ref: '#/components/schemas/Dinheiro'}
+        ticketMedio: {$ref: '#/components/schemas/Dinheiro'}
+        descontos: {$ref: '#/components/schemas/Dinheiro'}
+        taxaCancelamento: {type: number, description: Percentual sobre pedidos filtrados.}
+    Comparacao:
+      type: object
+      required: [inicio, fim, faturamento, variacaoFaturamento]
+      properties:
+        inicio: {type: string, format: date}
+        fim: {type: string, format: date}
+        faturamento: {$ref: '#/components/schemas/Dinheiro'}
+        variacaoFaturamento: {type: number, nullable: true, description: Percentual; null quando a receita anterior é zero.}
+    Venda:
+      type: object
+      required: [data, pedidos, faturamento]
+      properties:
+        data: {type: string, format: date, description: Início da faixa local; semana começa segunda-feira.}
+        pedidos: {type: integer, format: int64}
+        faturamento: {$ref: '#/components/schemas/Dinheiro'}
+    Situacao:
+      type: object
+      required: [status, quantidade]
+      properties:
+        status: {type: string, description: Status canônico ou situação legada desconhecida.}
+        quantidade: {type: integer, format: int64}
+    ProdutoVendido:
+      type: object
+      required: [produtoId, nome, quantidade, receitaBruta]
+      properties:
+        produtoId: {type: string}
+        nome: {type: string, description: Nome histórico do item mais recente.}
+        quantidade: {type: integer, format: int64}
+        receitaBruta: {$ref: '#/components/schemas/Dinheiro'}
+    Resumo:
+      type: object
+      required: [filtros, fusoHorario, atualizadoEm, indicadores, comparacao, vendas, situacoes, produtos]
+      properties:
+        filtros: {$ref: '#/components/schemas/Filtros'}
+        fusoHorario: {type: string, example: America/Sao_Paulo}
+        atualizadoEm: {type: string, format: date-time}
+        indicadores: {$ref: '#/components/schemas/Indicadores'}
+        comparacao: {$ref: '#/components/schemas/Comparacao'}
+        vendas:
+          type: array
+          items: {$ref: '#/components/schemas/Venda'}
+        situacoes:
+          type: array
+          items: {$ref: '#/components/schemas/Situacao'}
+        produtos:
+          type: array
+          maxItems: 5
+          items: {$ref: '#/components/schemas/ProdutoVendido'}
+    PedidoResumo:
+      type: object
+      required: [id, status, dataHoraEntrada, valorTotal, quantidadeItens]
+      properties:
+        id: {type: string}
+        status: {type: string}
+        dataHoraEntrada: {type: string, format: date-time}
+        valorTotal: {$ref: '#/components/schemas/Dinheiro'}
+        quantidadeItens: {type: integer, format: int64}
+    Pagina:
+      type: object
+      required: [itens, total, pagina, tamanho, totalPaginas]
+      properties:
+        itens:
+          type: array
+          maxItems: 50
+          items: {$ref: '#/components/schemas/PedidoResumo'}
+        total: {type: integer, format: int64}
+        pagina: {type: integer, minimum: 0}
+        tamanho: {type: integer, minimum: 1, maximum: 50}
+        totalPaginas: {type: integer, format: int64}
+    Problema:
+      type: object
+      required: [status, title, detail]
+      properties:
+        type: {type: string, example: 'about:blank'}
+        status: {type: integer, example: 400}
+        title: {type: string, example: Consulta inválida}
+        detail: {type: string, example: Status inválido.}
+        instance: {type: string, example: /api/dashboard}
+        timestamp: {type: string, format: date-time}

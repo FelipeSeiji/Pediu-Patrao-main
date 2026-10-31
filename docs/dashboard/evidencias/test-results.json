@@ -1,0 +1,359 @@
+{
+  "origem": "target/surefire-reports/TEST-*.xml",
+  "suites": [
+    {
+      "classe": "com.umc.pediupatrao.controller.ConfiguracoesPageIntegrationTest",
+      "testes": 4,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 6.488,
+      "casos": [
+        {
+          "nome": "horariosRenderizaParaGerente",
+          "resultado": "passou"
+        },
+        {
+          "nome": "atendenteNaoPodeAcessarConfiguracoes",
+          "resultado": "passou"
+        },
+        {
+          "nome": "entregadoresRenderizaParaGerente",
+          "resultado": "passou"
+        },
+        {
+          "nome": "formularioDeEntregadorRenderizaParaGerente",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.controller.PedidoSecurityIntegrationTest",
+      "testes": 5,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 1.508,
+      "casos": [
+        {
+          "nome": "gerentePodeCancelarPedidoPelaApi",
+          "resultado": "passou"
+        },
+        {
+          "nome": "gerentePodeAplicarDescontoPelaApi",
+          "resultado": "passou"
+        },
+        {
+          "nome": "atendenteNaoPodeCancelarPedido",
+          "resultado": "passou"
+        },
+        {
+          "nome": "apiExigeTokenCsrfParaAlteracoes",
+          "resultado": "passou"
+        },
+        {
+          "nome": "adminNaoPodeAplicarDescontoNemCancelar",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.controller.ProdutoPageIntegrationTest",
+      "testes": 1,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 0.999,
+      "casos": [
+        {
+          "nome": "produtosRenderizaFragmentoDentroDoLayout",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.dashboard.DashboardControllerTest",
+      "testes": 16,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 0.893,
+      "casos": [
+        {
+          "nome": "responsavelAcessaPaginaEFiltros(String)[1]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "responsavelAcessaPaginaEFiltros(String)[2]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "filtrosInvalidosRetornam400(String)[1]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "filtrosInvalidosRetornam400(String)[2]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "filtrosInvalidosRetornam400(String)[3]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "filtrosInvalidosRetornam400(String)[4]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "anonimoRecebeJson401(String)[1]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "anonimoRecebeJson401(String)[2]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "anonimoRecebeJson401(String)[3]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "atendenteNaoAcessa(String)[1]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "atendenteNaoAcessa(String)[2]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "atendenteNaoAcessa(String)[3]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "atendenteNaoAcessa(String)[4]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "respostaNaoDeveSerArmazenadaEmCache",
+          "resultado": "passou"
+        },
+        {
+          "nome": "indisponibilidadeNaoExpoeDetalhesDoBanco",
+          "resultado": "passou"
+        },
+        {
+          "nome": "paginacaoNaoNumericaRetorna400",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.dashboard.DashboardFiltroTest",
+      "testes": 8,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 0.019,
+      "casos": [
+        {
+          "nome": "padraoEComparacaoTemMesmaDuracao",
+          "resultado": "passou"
+        },
+        {
+          "nome": "aceitaUmDiaEAnoBissexto",
+          "resultado": "passou"
+        },
+        {
+          "nome": "rejeitaAgrupamentoInvalido",
+          "resultado": "passou"
+        },
+        {
+          "nome": "rejeitaPeriodoInvertidoOuExcessivo",
+          "resultado": "passou"
+        },
+        {
+          "nome": "rejeitaStatusForaDoContrato(String)[1]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "rejeitaStatusForaDoContrato(String)[2]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "rejeitaStatusForaDoContrato(String)[3]",
+          "resultado": "passou"
+        },
+        {
+          "nome": "rejeitaStatusForaDoContrato(String)[4]",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.dashboard.DashboardHttpIntegrationTest",
+      "testes": 3,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 2.434,
+      "casos": [
+        {
+          "nome": "paginaRetornaProjecaoSemCliente",
+          "resultado": "passou"
+        },
+        {
+          "nome": "servicoTambemProtegeAcessoDireto",
+          "resultado": "passou"
+        },
+        {
+          "nome": "resumoExecutaSegurancaControllerServicoEBanco",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.dashboard.DashboardMongoIntegrationTest",
+      "testes": 9,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 0.379,
+      "casos": [
+        {
+          "nome": "calculaReceitaLiquidaTicketCancelamentosERankingSemDuplicarPedidos",
+          "resultado": "passou"
+        },
+        {
+          "nome": "legadoSemValorOuItensNaoQuebraConsulta",
+          "resultado": "passou"
+        },
+        {
+          "nome": "respeitaMeiaNoiteLocalEFimInclusivo",
+          "resultado": "passou"
+        },
+        {
+          "nome": "rejeitaPaginacaoForaDosLimites",
+          "resultado": "passou"
+        },
+        {
+          "nome": "aplicaStatusNormalizadoEmTodosOsBlocos",
+          "resultado": "passou"
+        },
+        {
+          "nome": "preencheSemanasEMesesSemMovimento",
+          "resultado": "passou"
+        },
+        {
+          "nome": "limitaRankingATopCincoSemMultiplicarContagemDePedidos",
+          "resultado": "passou"
+        },
+        {
+          "nome": "comparaPeriodoAnteriorDoMesmoTamanho",
+          "resultado": "passou"
+        },
+        {
+          "nome": "paginaComOrdenacaoEstavelEProjecaoReduzida",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.service.ClienteServiceTest",
+      "testes": 2,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 0.037,
+      "casos": [
+        {
+          "nome": "exclusaoAuditaCamposRemovidosAntesDeExcluir",
+          "resultado": "passou"
+        },
+        {
+          "nome": "alteracaoAuditaTelefoneEEnderecoAnteriorENovo",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.service.EntregadorServiceTest",
+      "testes": 1,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 0.072,
+      "casos": [
+        {
+          "nome": "criaEntregadorQuandoFormularioEnviaIdVazio",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.service.HorarioFuncionamentoServiceTest",
+      "testes": 3,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 0.073,
+      "casos": [
+        {
+          "nome": "rejeitaSemanaIncompleta",
+          "resultado": "passou"
+        },
+        {
+          "nome": "rejeitaDiaAbertoSemIntervaloValido",
+          "resultado": "passou"
+        },
+        {
+          "nome": "salvaSemanaCompletaEApagaFaixasDeDiasFechados",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.service.PedidoServiceTest",
+      "testes": 4,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 0.021,
+      "casos": [
+        {
+          "nome": "cancelamentoExigeJustificativaEDeveOcorrerAntesDaSaida",
+          "resultado": "passou"
+        },
+        {
+          "nome": "limitaDescontoAteVintePorCento",
+          "resultado": "passou"
+        },
+        {
+          "nome": "criarPedidoCalculaPrecoNoServidorERegistraEntrada",
+          "resultado": "passou"
+        },
+        {
+          "nome": "bloqueiaTransicaoInvalida",
+          "resultado": "passou"
+        }
+      ]
+    },
+    {
+      "classe": "com.umc.pediupatrao.service.ProdutoServiceTest",
+      "testes": 1,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0,
+      "segundos": 0.003,
+      "casos": [
+        {
+          "nome": "criaProdutoQuandoFormularioEnviaIdVazio",
+          "resultado": "passou"
+        }
+      ]
+    }
+  ],
+  "totais": {
+    "testes": 57,
+    "falhas": 0,
+    "erros": 0,
+    "ignorados": 0
+  }
+}

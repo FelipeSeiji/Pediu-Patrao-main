@@ -1,0 +1,56 @@
+[
+  {
+    "titulo": "Pediu Patrão · Dashboard Administrativo",
+    "imagem": "01-visao-geral.png",
+    "legenda": "Indicadores calculados a partir dos pedidos do MongoDB · Ambiente de demonstração",
+    "narracao": "Este é o Dashboard Administrativo integrado ao Pediu Patrão. A aplicação usa Spring Boot e MongoDB. Administradores e gerentes acompanham o faturamento realizado, os pedidos, o ticket médio e os cancelamentos. As telas desta apresentação mostram dados fictícios de um banco de demonstração separado."
+  },
+  {
+    "titulo": "Filtros que orientam a análise",
+    "imagem": "02-sete-dias.png",
+    "legenda": "30 dias → 7 dias: indicadores, gráficos, ranking e pedidos são recalculados",
+    "narracao": "Ao trocar trinta dias por sete dias, os indicadores e todos os blocos são recalculados pela API. Também podemos escolher datas e situação do pedido. A comparação considera o período imediatamente anterior, com a mesma duração. O faturamento inclui somente pedidos finalizados, já com os descontos aplicados."
+  },
+  {
+    "titulo": "Tendências de receita e volume",
+    "imagem": "07-vendas-semanais.png",
+    "legenda": "Agrupamento por dia, semana ou mês · Faixas sem movimento recebem zero",
+    "narracao": "O gráfico apresenta a evolução das vendas por dia, semana ou mês. Aqui vemos o agrupamento semanal. É possível alternar entre receita e quantidade de pedidos. Os intervalos sem movimento aparecem com zero. Uma tabela acessível oferece os valores exatos, além da representação visual."
+  },
+  {
+    "titulo": "Cancelamentos com regra explícita",
+    "imagem": "05-cancelados.png",
+    "legenda": "Filtro CANCELADO: volume e taxa aparecem; receita realizada e ticket ficam em zero",
+    "narracao": "Neste exemplo, selecionamos somente pedidos cancelados. Eles continuam contando no volume e na taxa de cancelamento, mas a receita realizada e o ticket ficam em zero. A rosca e a legenda mostram a distribuição das situações, ajudando o responsável a entender a operação."
+  },
+  {
+    "titulo": "O que vende mais e quais pedidos chegaram",
+    "imagem": "03-ranking-pedidos.png",
+    "legenda": "Top 5 por unidades vendidas · Nome e preço históricos preservados no pedido",
+    "narracao": "O ranking identifica os cinco produtos mais vendidos em pedidos finalizados. A quantidade orienta decisões de cardápio e estoque. A receita dos itens é bruta, antes do desconto global, e isso é informado na tela. Os nomes e preços vêm do histórico do pedido, preservando a informação original."
+  },
+  {
+    "titulo": "Pedidos paginados e dados protegidos",
+    "imagem": "04-paginacao.png",
+    "legenda": "Ordenação por entrada e ID · Somente os campos necessários à análise são retornados",
+    "narracao": "Ao avançar a página, a API busca o próximo grupo de pedidos. A ordenação por entrada e identificador resolve empates. A resposta retorna apenas os dados necessários ao painel e não expõe nome, endereço ou outros dados do cliente. A interface também funciona em telas pequenas."
+  },
+  {
+    "titulo": "Estados vazios e atualização",
+    "imagem": "06-sem-dados.png",
+    "legenda": "Período sem pedidos: mensagem clara, indicadores zerados e nenhuma venda inventada",
+    "narracao": "Quando não há pedidos no período, a interface explica o resultado e apresenta indicadores zerados. Há atualização manual e automática a cada sessenta segundos. Falhas de conexão, sessão expirada e filtros inválidos recebem mensagens próprias. Consultas substituídas são canceladas para evitar a exibição de respostas antigas."
+  },
+  {
+    "titulo": "API, banco e decisões de projeto",
+    "imagem": "07-vendas-semanais.png",
+    "legenda": "GET /api/dashboard · GET /api/dashboard/pedidos · GET /api/dashboard/filtros",
+    "narracao": "Foram implementados três endpoints: visão consolidada, pedidos paginados e opções de filtros. O MongoDB executa as agregações, com índice por data e identificador. Valores usam precisão decimal. A autenticação existente foi mantida, com acesso exclusivo para administrador e gerente. O atendente não acessa os dados financeiros."
+  },
+  {
+    "titulo": "Entrega verificável no GitHub",
+    "imagem": "01-visao-geral.png",
+    "legenda": "Requisitos · Modelagem · OpenAPI · Evidências reais · Gitflow · Testes com MongoDB",
+    "narracao": "O repositório reúne código funcional, requisitos, arquitetura, contrato Open API, exemplos de erros e evidências. Cinquenta e sete testes passaram, incluindo integração com MongoDB real, permissões, descontos, cancelamentos e limites de data. A implementação está em uma branch de feature, com integração proposta para develop e execução automática dos testes no GitHub."
+  }
+]
