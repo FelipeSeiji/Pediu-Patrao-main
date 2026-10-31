@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>Dashboard Administrativo | Pediu Patrão</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <script defer th:src="@{/js/dashboard.js}"></script>
+</head>
+<body>
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+<aside class="dash-sidebar" aria-label="Navegação principal">
+    <a class="brand" th:href="@{/}"><span class="brand-mark">p<span>.</span></span><span>Pediu Patrão<small>GESTÃO DO ESTABELECIMENTO</small></span></a>
+    <span class="nav-caption">PRINCIPAL</span>
+    <nav>
+        <a class="nav-current" th:href="@{/dashboard}" aria-current="page"><span aria-hidden="true">▦</span> Visão geral</a>
+        <a th:href="@{/pedidos}"><span aria-hidden="true">▤</span> Pedidos</a>
+        <a th:href="@{/produtos}"><span aria-hidden="true">◇</span> Produtos</a>
+        <a th:if="${perfilGerente}" th:href="@{/clientes}"><span aria-hidden="true">♙</span> Clientes</a>
+        <a th:href="@{/auditoria}"><span aria-hidden="true">◎</span> Auditoria</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="live-dot"></span> Sua operação em perspectiva<p>Decisões melhores começam<br>com os seus números.</p>
+        <form th:action="@{/logout}" method="post"><button class="logout" type="submit">Sair da conta <span aria-hidden="true">↗</span></button></form>
+    </div>
+</aside>
+<main id="conteudo" class="dash-main">
+    <header class="topbar"><span>Seu negócio <span class="breadcrumb-divider">/</span> <strong>Visão geral</strong></span><span class="user-label"><span class="avatar" aria-hidden="true">PP</span><span th:text="${usuario}">Responsável</span></span></header>
+    <div class="dashboard-content">
+        <div class="page-heading"><div><p class="eyebrow">DASHBOARD ADMINISTRATIVO</p><h1>Uma visão completa do seu negócio<span>.</span></h1><p class="subtitle">Acompanhe as vendas, os pedidos e o que faz sucesso no seu cardápio.</p></div><button id="atualizar" class="button button-white" type="button"><span aria-hidden="true">↻</span> Atualizar</button></div>
+
+        <form id="filtros" class="filters panel" aria-label="Filtros do dashboard">
+            <div class="period-presets" aria-label="Períodos rápidos"><button type="button" data-dias="7">7 dias</button><button type="button" class="selected" data-dias="30">30 dias</button><button type="button" data-dias="mes">Este mês</button></div>
+            <label>De<input id="inicio" name="inicio" type="date" required></label>
+            <label>Até<input id="fim" name="fim" type="date" required></label>
+            <label>Situação<select id="status" name="status"><option value="">Todos os pedidos</option></select></label>
+            <label>Agrupar por<select id="agrupamento" name="agrupamento"><option value="dia">Dia</option><option value="semana">Semana</option><option value="mes">Mês</option></select></label>
+            <button class="button button-primary" type="submit">Aplicar filtros <span aria-hidden="true">→</span></button>
+        </form>
+
+        <div class="data-caption"><p id="periodo">Preparando sua visão geral…</p><span id="atualizacao" role="status" aria-live="polite">Conectando à API</span></div>
+        <div id="erro" class="error-banner" role="alert" hidden><span id="erro-texto"></span><button id="tentar" type="button">Tentar novamente</button></div>
+        <div id="vazio" class="empty-banner" hidden>Nenhum pedido encontrado neste período. Experimente ampliar as datas ou alterar a situação.</div>
+
+        <section id="resultados" aria-label="Resultados da consulta" aria-busy="true">
+            <div class="kpi-grid">
+                <article class="kpi panel"><div class="kpi-title">Faturamento realizado <span class="metric-icon coral" aria-hidden="true">↗</span></div><strong id="faturamento" class="kpi-value">—</strong><p id="comparacao">Comparação com o período anterior</p></article>
+                <article class="kpi panel"><div class="kpi-title">Pedidos no período <span class="metric-icon blue" aria-hidden="true">▤</span></div><strong id="pedidos" class="kpi-value">—</strong><p id="andamento">Todos os status selecionados</p></article>
+                <article class="kpi panel"><div class="kpi-title">Ticket médio <span class="metric-icon green" aria-hidden="true">◈</span></div><strong id="ticket" class="kpi-value">—</strong><p>Valor médio por pedido finalizado</p></article>
+                <article class="kpi panel"><div class="kpi-title">Pedidos cancelados <span class="metric-icon purple" aria-hidden="true">⊘</span></div><strong id="cancelados" class="kpi-value">—</strong><p id="taxa">Taxa de cancelamento no período</p></article>
+            </div>
+
+            <div class="charts-grid">
+                <section class="panel sales-panel"><div class="panel-heading"><div><h2>Evolução das vendas</h2><p>Entenda o ritmo da sua operação</p></div><div class="segmented" aria-label="Métrica do gráfico"><button type="button" data-metrica="faturamento" aria-pressed="true" class="selected">Receita</button><button type="button" data-metrica="pedidos" aria-pressed="false">Pedidos</button></div></div>
+                    <div id="grafico-vendas" class="sales-chart" aria-label="Gráfico de evolução das vendas"></div>
+                    <div class="chart-footer"><span><i class="legend-dot coral-bg"></i> <span id="legenda-metrica">Faturamento realizado</span></span><span id="total-finalizados">— pedidos finalizados</span></div>
+                    <details class="chart-data"><summary>Consultar dados do gráfico</summary><div class="table-scroll"><table><caption class="sr-only">Série temporal de vendas</caption><thead><tr><th scope="col">Período</th><th scope="col">Pedidos</th><th scope="col">Faturamento</th></tr></thead><tbody id="serie-tabela"></tbody></table></div></details>
+                </section>
+                <section class="panel status-panel"><div class="panel-heading"><div><h2>Situação dos pedidos</h2><p>Cada etapa da sua operação</p></div><span class="panel-symbol" aria-hidden="true">◎</span></div><div class="donut-wrapper"><div id="donut" class="donut"><div class="donut-hole"><strong id="donut-total">—</strong><span>pedidos</span></div></div></div><ul id="situacoes" class="status-legend" aria-label="Quantidade por situação"></ul></section>
+            </div>
+
+            <div class="bottom-grid">
+                <section class="panel products-panel"><div class="panel-heading"><div><h2>Os favoritos do cardápio</h2><p>Top 5 produtos em pedidos finalizados</p></div><span class="small-tag">MAIS VENDIDOS</span></div><ol id="ranking" class="ranking"></ol><div class="panel-note">Receita bruta dos itens, antes dos descontos do pedido.</div></section>
+                <section class="panel orders-panel"><div class="panel-heading"><div><h2>Últimos pedidos</h2><p>Pedidos recebidos no período selecionado</p></div><a class="text-link" th:href="@{/pedidos}">Ver pedidos ↗</a></div><div class="table-scroll"><table><caption class="sr-only">Pedidos do período</caption><thead><tr><th scope="col">Pedido / entrada</th><th scope="col">Situação</th><th scope="col" class="align-right">Valor</th></tr></thead><tbody id="pedidos-tabela"><tr><td colspan="3" class="table-empty">Carregando pedidos…</td></tr></tbody></table></div><div class="pagination"><span id="paginacao-info">—</span><div><button id="anterior" type="button" aria-label="Página anterior" disabled>←</button><button id="proxima" type="button" aria-label="Próxima página" disabled>→</button></div></div></section>
+            </div>
+            <div class="business-note"><span aria-hidden="true">ⓘ</span><p>Faturamento e ticket consideram pedidos finalizados e os descontos aplicados. As datas usam o recebimento do pedido, no horário de São Paulo.</p></div>
+        </section>
+        <footer class="dash-footer"><span>Pediu Patrão <span class="footer-dot">•</span> Inteligência para a sua operação</span><span>Atualização automática a cada 60 segundos</span></footer>
+    </div>
+</main>
+</body>
+</html>
