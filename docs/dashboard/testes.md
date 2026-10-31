@@ -16,6 +16,8 @@ Também foram aprovadas **9 verificações HTTP** na aplicação executada: aute
 
 O contrato OpenAPI foi validado com `openapi-spec-validator`. O vídeo foi decodificado integralmente com FFmpeg, sem erro: H.264/AAC, 1600×900, duração **2min54s**, abaixo do limite de três minutos. [Metadados](evidencias/video-metadata.json).
 
+O CI fixa `ubuntu-22.04`, cujo kernel 6.8 permite iniciar o MongoDB 8.0. A primeira execução em `ubuntu-latest` encontrou a incompatibilidade de inicialização do banco com kernels 6.19–7.0.13, antes de executar o código da aplicação. Referências: [restrição documentada pelo MongoDB](https://www.mongodb.com/docs/manual/administration/production-notes/), [imagem do runner 22.04](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md). Ao atualizar o runner, verifique a compatibilidade do kernel com a imagem do banco.
+
 | Suíte | Testes | Cobertura relevante |
 |---|---:|---|
 | DashboardFiltroTest | 8 | Padrões, mesmo período anterior, um dia, ano bissexto, período invertido/excessivo, status e agrupamento inválidos. |
