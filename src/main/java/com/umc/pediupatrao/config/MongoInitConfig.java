@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.index.Index;
 
 @Configuration
 public class MongoInitConfig implements CommandLineRunner {
@@ -13,6 +15,8 @@ public class MongoInitConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        mongoTemplate.indexOps("pedidos").ensureIndex(new Index().on("dataHoraEntrada", Sort.Direction.DESC)
+                .on("_id", Sort.Direction.DESC).named("dashboard_data_id"));
         if (!mongoTemplate.collectionExists("pedidos")) {
             mongoTemplate.createCollection("pedidos");
         }

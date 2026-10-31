@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -51,8 +52,24 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/css/**", "/dist/**", "/plugins/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/usuarios/**", "/api/usuarios/**").hasRole("ADMIN")
                 .requestMatchers("/auditoria/**", "/api/auditoria/**").hasAnyRole("ADMIN", "GERENTE")
+                .requestMatchers("/dashboard", "/api/dashboard", "/api/dashboard/**").hasAnyRole("ADMIN", "GERENTE")
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(errors -> errors
+                        .defaultAuthenticationEntryPointFor((request, response, exception) -> {
+                            response.setStatus(401);
+                            response.setContentType("application/problem+json;charset=UTF-8");
+                            response.getWriter().write("{\"status\":401,\"title\":\"Autenticação necessária\",\"detail\":\"Entre no sistema para consultar o dashboard.\"}");
+                        }, new AntPathRequestMatcher("/api/dashboard/**"))
+                        .accessDeniedHandler((request, response, exception) -> {
+                            if (!request.getRequestURI().startsWith(request.getContextPath() + "/api/dashboard")) {
+                                response.sendError(403);
+                                return;
+                            }
+                            response.setStatus(403);
+                            response.setContentType("application/problem+json;charset=UTF-8");
+                            response.getWriter().write("{\"status\":403,\"title\":\"Acesso negado\",\"detail\":\"Seu perfil não permite esta operação.\"}");
+                        }))
                 .formLogin(form -> form
                         .loginPage("/login")
                         .permitAll()
